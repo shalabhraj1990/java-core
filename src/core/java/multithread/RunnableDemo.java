@@ -1,4 +1,4 @@
-package core.java.mutithread;
+package core.java.multithread;
 
 public class RunnableDemo {
 	public static void main(String[] args) {
