@@ -1,5 +1,6 @@
 package core.java.multithread;
 
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -48,12 +49,33 @@ public class CompleteableFutureDemo {
 
 		// 6 thenCombine/thenConbineAsyc when we want to run 2 task in separate thread
 		// and then combine the results of task1 and task2 in separate thread
-		CompletableFuture<String> t1 = task1();
-		CompletableFuture<String> t2 = task2();
-		CompletableFuture<String> result = t1.thenCombineAsync(t2, (r1, r2) -> {
-			return r1 + "-" + r2;
+//		CompletableFuture<String> t1 = task1();
+//		CompletableFuture<String> t2 = task2();
+//		CompletableFuture<String> result = t1.thenCombineAsync(t2, (r1, r2) -> {
+//			return r1 + "-" + r2;
+//		});
+//		System.out.println(result.get());
+		// 7 exceptionally to handle exception with CompletableFuture
+//		CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> {
+//			if (new Random().nextBoolean())
+//				throw new RuntimeException("Got true from Random!!!");
+//			return "success response";
+//		}).exceptionally(ex -> {
+//			System.out.println(ex.getMessage());
+//			return "Exception at service";
+//		});
+		// 7 handle to handle exception with CompletableFuture
+		CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> {
+			if (new Random().nextBoolean())
+				throw new RuntimeException("Got true from Random!!!");
+			return "success response";
+		}).handle((res, ex) -> {
+			if (null != ex) {
+				throw new RuntimeException(ex);
+			}
+			return res + "added information from handle";
 		});
-		System.out.println(result.get());
+		System.out.println(cf.get());
 	}
 
 	private static CompletableFuture<String> task1() {
